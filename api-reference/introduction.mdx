@@ -1,33 +1,48 @@
 ---
 title: 'Introduction'
-description: 'Example section for showcasing API endpoints'
+description: 'Documentación de la API SII para interactuar con el Servicio de Impuestos Internos de Chile'
 ---
 
-<Note>
-  If you're not looking to build API reference documentation, you can delete
-  this section by removing the api-reference folder.
-</Note>
+## Bienvenido
 
-## Welcome
-
-There are two ways to build API documentation: [OpenAPI](https://mintlify.com/docs/api-playground/openapi/setup) and [MDX components](https://mintlify.com/docs/api-playground/mdx/configuration). For the starter kit, we are using the following OpenAPI specification.
+Esta API permite interactuar con el SII (Servicio de Impuestos Internos) de Chile de forma automatizada. Utiliza Playwright para automatizar las interacciones con el portal web del SII.
 
 <Card
-  title="Plant Store Endpoints"
-  icon="leaf"
-  href="https://github.com/mintlify/starter/blob/main/api-reference/openapi.json"
+  title="OpenAPI Specification"
+  icon="file-code"
+  href="https://github.com/luch1u/api-sii/blob/main/docs/api-reference/openapi.json"
 >
-  View the OpenAPI specification file
+  Ver la especificación OpenAPI completa
 </Card>
 
-## Authentication
+## Características
 
-All API endpoints are authenticated using Bearer tokens and picked up from the specification file.
+- ✅ Verificación automática del estado de login en SII
+- ✅ Emisión automática de boletas de honorarios
+- ✅ Validación de RUT chileno con dígito verificador
+- ✅ Retorno de PDF de boletas en formato base64
+- ✅ Manejo de errores robusto
 
-```json
-"security": [
-  {
-    "bearerAuth": []
-  }
-]
-```
+## Endpoints disponibles
+
+### Health Check
+- `GET /` o `GET /health` - Verifica que la API esté funcionando
+
+### SII
+- `GET /sii/health` - Verifica el estado de las credenciales del SII
+- `POST /sii/boleta` - Emite una boleta de honorarios automáticamente
+
+## Autenticación
+
+Las credenciales del SII se almacenan de forma segura en AWS Secrets Manager y se recuperan automáticamente en cada request. No es necesario enviar credenciales en las peticiones.
+
+## Base URL
+
+La API está desplegada en AWS API Gateway. La URL base depende del stage de despliegue:
+
+- **Desarrollo**: `https://your-api-gateway-url.execute-api.us-east-1.amazonaws.com/dev`
+- **Local**: `http://localhost:3000` (usando serverless-offline)
+
+## CORS
+
+Todos los endpoints tienen CORS habilitado y aceptan peticiones desde cualquier origen.

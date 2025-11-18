@@ -1,4 +1,21 @@
 ---
-title: 'Delete Plant'
-openapi: 'DELETE /plants/{id}'
+title: 'Verificar estado del login SII'
+openapi: 'GET /sii/health'
 ---
+
+Verifica el estado de las credenciales del SII intentando hacer login automáticamente. Este endpoint utiliza Playwright para automatizar el proceso de autenticación en el portal del SII.
+
+<Warning>
+Este endpoint puede tardar entre 10-30 segundos ya que realiza un login completo en el portal del SII.
+</Warning>
+
+## Respuestas
+
+### 200 - Login exitoso
+Indica que las credenciales son válidas y el login fue exitoso.
+
+### 401 - Login fallido
+Las credenciales son inválidas o hubo un error en el proceso de login.
+
+### 500 - Error del servidor
+Error interno durante el proceso de verificación.

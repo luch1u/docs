@@ -1,4 +1,37 @@
 ---
-title: 'Create Plant'
-openapi: 'POST /plants'
+title: 'Emitir boleta de honorarios'
+openapi: 'POST /sii/boleta'
 ---
+
+Emite una boleta de honorarios en el SII de forma automática. Este endpoint realiza todo el proceso:
+
+1. Login en el portal del SII
+2. Navegación al formulario de boletas
+3. Selección del tipo de retención
+4. Completado del formulario con los datos proporcionados
+5. Emisión de la boleta
+6. Captura del PDF generado
+
+<Warning>
+Este endpoint puede tardar entre 60-120 segundos ya que realiza todo el proceso de emisión de boleta de forma automatizada.
+</Warning>
+
+## Validaciones
+
+- **RUT destinatario**: Se valida el formato y el dígito verificador
+- **Tipo de retención**: Debe ser `RETRECEPTOR` o `RETCONTRIBUYENTE`
+- **Valor de prestación**: Debe ser un número válido mayor a 0
+
+## Respuestas
+
+### 200 - Boleta emitida exitosamente
+La boleta fue emitida correctamente. El campo `pdfBase64` puede contener el PDF en formato base64 si se pudo capturar automáticamente.
+
+### 400 - Solicitud inválida
+Los parámetros enviados son inválidos o faltan campos requeridos.
+
+### 401 - Login fallido
+No se pudo realizar el login en el SII. Verifique las credenciales configuradas.
+
+### 500 - Error del servidor
+Error interno durante el proceso de emisión.

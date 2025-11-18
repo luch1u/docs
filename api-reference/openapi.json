@@ -1,94 +1,37 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "OpenAPI Plant Store",
-    "description": "A sample API that uses a plant store as an example to demonstrate features in the OpenAPI specification",
-    "license": {
-      "name": "MIT"
-    },
-    "version": "1.0.0"
+    "title": "API SII",
+    "description": "API para interactuar con el SII (Servicio de Impuestos Internos) de Chile. Permite verificar el estado de las credenciales y emitir boletas de honorarios automáticamente.",
+    "version": "1.0.0",
+    "contact": {
+      "name": "API Support"
+    }
   },
   "servers": [
     {
-      "url": "http://sandbox.mintlify.com"
-    }
-  ],
-  "security": [
+      "url": "https://your-api-gateway-url.execute-api.us-east-1.amazonaws.com/dev",
+      "description": "Servidor de desarrollo"
+    },
     {
-      "bearerAuth": []
+      "url": "http://localhost:3000",
+      "description": "Servidor local (serverless offline)"
     }
   ],
   "paths": {
-    "/plants": {
+    "/": {
       "get": {
-        "description": "Returns all plants from the system that the user has access to",
-        "parameters": [
-          {
-            "name": "limit",
-            "in": "query",
-            "description": "The maximum number of results to return",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
+        "summary": "Health Check",
+        "description": "Verifica que la API esté funcionando correctamente",
+        "operationId": "healthCheck",
+        "tags": ["Health"],
         "responses": {
           "200": {
-            "description": "Plant response",
+            "description": "API funcionando correctamente",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Plant"
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Unexpected error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "description": "Creates a new plant in the store",
-        "requestBody": {
-          "description": "Plant to add to the store",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NewPlant"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "plant response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Plant"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "unexpected error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/HealthCheckResponse"
                 }
               }
             }
@@ -96,57 +39,128 @@
         }
       }
     },
-    "/plants/{id}": {
-      "delete": {
-        "description": "Deletes a single plant based on the ID supplied",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "ID of plant to delete",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          }
-        ],
+    "/health": {
+      "get": {
+        "summary": "Health Check",
+        "description": "Verifica que la API esté funcionando correctamente",
+        "operationId": "healthCheckAlt",
+        "tags": ["Health"],
         "responses": {
-          "204": {
-            "description": "Plant deleted",
-            "content": {}
-          },
-          "400": {
-            "description": "unexpected error",
+          "200": {
+            "description": "API funcionando correctamente",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/HealthCheckResponse"
                 }
               }
             }
           }
         }
       }
-    }
-  },
-  "webhooks": {
-    "/plant/webhook": {
+    },
+    "/sii/health": {
+      "get": {
+        "summary": "Verificar estado del login SII",
+        "description": "Verifica el estado de las credenciales del SII intentando hacer login. Este endpoint utiliza Playwright para automatizar el proceso de autenticación en el portal del SII.",
+        "operationId": "siiHealthCheck",
+        "tags": ["SII"],
+        "responses": {
+          "200": {
+            "description": "Login exitoso en SII",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SIIHealthCheckResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Credenciales inválidas o login fallido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error interno del servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sii/boleta": {
       "post": {
-        "description": "Information about a new plant added to the store",
+        "summary": "Emitir boleta de honorarios",
+        "description": "Emite una boleta de honorarios en el SII de forma automática. Este endpoint realiza el login, navega al formulario de boletas, completa los datos y emite la boleta, retornando el PDF en formato base64.",
+        "operationId": "emitirBoleta",
+        "tags": ["SII"],
         "requestBody": {
-          "description": "Plant added to the store",
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/NewPlant"
+                "$ref": "#/components/schemas/EmitirBoletaRequest"
+              },
+              "example": {
+                "tipoRetencion": "RETRECEPTOR",
+                "rutDestinatario": "12345678-9",
+                "descripcionPrestacion": "Servicios de consultoría en desarrollo de software",
+                "valorPrestacion": 500000
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Return a 200 status to indicate that the data was received successfully"
+            "description": "Boleta emitida exitosamente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmitirBoletaResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Solicitud inválida (parámetros faltantes o inválidos)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Login fallido en SII",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error interno del servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -154,63 +168,145 @@
   },
   "components": {
     "schemas": {
-      "Plant": {
-        "required": [
-          "name"
-        ],
+      "HealthCheckResponse": {
         "type": "object",
         "properties": {
-          "name": {
-            "description": "The name of the plant",
-            "type": "string"
+          "message": {
+            "type": "string",
+            "example": "API is running"
           },
-          "tag": {
-            "description": "Tag to specify the type",
-            "type": "string"
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2024-01-01T00:00:00.000Z"
+          },
+          "service": {
+            "type": "string",
+            "example": "api-sii"
           }
         }
       },
-      "NewPlant": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/Plant"
+      "SIIHealthCheckResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": ["ok", "error"],
+            "example": "ok"
           },
-          {
-            "required": [
-              "id"
-            ],
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2024-01-01T00:00:00.000Z"
+          },
+          "siiLogin": {
             "type": "object",
             "properties": {
-              "id": {
-                "description": "Identification number of the plant",
-                "type": "integer",
-                "format": "int64"
+              "isLoggedIn": {
+                "type": "boolean",
+                "example": true
+              },
+              "message": {
+                "type": "string",
+                "example": "Login exitoso en SII"
+              },
+              "url": {
+                "type": "string",
+                "example": "https://misiir.sii.cl/cgi_misii/siihome.cgi"
+              },
+              "error": {
+                "type": "string",
+                "nullable": true
               }
             }
           }
-        ]
+        }
       },
-      "Error": {
-        "required": [
-          "error",
-          "message"
-        ],
+      "EmitirBoletaRequest": {
         "type": "object",
+        "required": ["tipoRetencion", "rutDestinatario", "descripcionPrestacion", "valorPrestacion"],
         "properties": {
-          "error": {
-            "type": "integer",
-            "format": "int32"
+          "tipoRetencion": {
+            "type": "string",
+            "enum": ["RETRECEPTOR", "RETCONTRIBUYENTE"],
+            "description": "Tipo de retención de la boleta. RETRECEPTOR: Retención por el receptor. RETCONTRIBUYENTE: Retención por el contribuyente.",
+            "example": "RETRECEPTOR"
           },
-          "message": {
-            "type": "string"
+          "rutDestinatario": {
+            "type": "string",
+            "description": "RUT del destinatario en formato chileno (12345678-9). El dígito verificador será validado automáticamente.",
+            "pattern": "^\\d{7,8}-[0-9K]$",
+            "example": "12345678-9"
+          },
+          "descripcionPrestacion": {
+            "type": "string",
+            "description": "Descripción detallada de la prestación de servicios",
+            "example": "Servicios de consultoría en desarrollo de software"
+          },
+          "valorPrestacion": {
+            "type": "number",
+            "description": "Valor de la prestación en pesos chilenos (sin puntos ni comas)",
+            "minimum": 0,
+            "example": 500000
           }
         }
-      }
-    },
-    "securitySchemes": {
-      "bearerAuth": {
-        "type": "http",
-        "scheme": "bearer"
+      },
+      "EmitirBoletaResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "message": {
+            "type": "string",
+            "example": "Boleta emitida exitosamente"
+          },
+          "tipoRetencion": {
+            "type": "string",
+            "example": "RETRECEPTOR"
+          },
+          "rutDestinatario": {
+            "type": "string",
+            "example": "12345678-9"
+          },
+          "descripcionPrestacion": {
+            "type": "string",
+            "example": "Servicios de consultoría en desarrollo de software"
+          },
+          "valorPrestacion": {
+            "type": "number",
+            "example": 500000
+          },
+          "pdfBase64": {
+            "type": "string",
+            "description": "PDF de la boleta emitida en formato base64 (opcional, puede ser null si no se pudo capturar)",
+            "nullable": true,
+            "example": null
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": false
+          },
+          "error": {
+            "type": "string",
+            "example": "Error parsing JSON"
+          },
+          "message": {
+            "type": "string",
+            "example": "El body de la petición debe ser un JSON válido"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        }
       }
     }
   }
