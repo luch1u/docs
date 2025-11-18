@@ -10,12 +10,13 @@
   },
   "servers": [
     {
-      "url": "https://your-api-gateway-url.execute-api.us-east-1.amazonaws.com/dev",
-      "description": "Servidor de desarrollo"
-    },
+      "url": "https://ql3xbjhoe0.execute-api.us-east-1.amazonaws.com/dev",
+      "description": "Ambiente de desarrollo y pruebas"
+    }
+  ],
+  "security": [
     {
-      "url": "http://localhost:3000",
-      "description": "Servidor local (serverless offline)"
+      "bearerAuth": []
     }
   ],
   "paths": {
@@ -24,7 +25,9 @@
         "summary": "Health Check",
         "description": "Verifica que la API esté funcionando correctamente",
         "operationId": "healthCheck",
-        "tags": ["Health"],
+        "tags": [
+          "Health"
+        ],
         "responses": {
           "200": {
             "description": "API funcionando correctamente",
@@ -44,7 +47,9 @@
         "summary": "Health Check",
         "description": "Verifica que la API esté funcionando correctamente",
         "operationId": "healthCheckAlt",
-        "tags": ["Health"],
+        "tags": [
+          "Health"
+        ],
         "responses": {
           "200": {
             "description": "API funcionando correctamente",
@@ -64,7 +69,9 @@
         "summary": "Verificar estado del login SII",
         "description": "Verifica el estado de las credenciales del SII intentando hacer login. Este endpoint utiliza Playwright para automatizar el proceso de autenticación en el portal del SII.",
         "operationId": "siiHealthCheck",
-        "tags": ["SII"],
+        "tags": [
+          "SII"
+        ],
         "responses": {
           "200": {
             "description": "Login exitoso en SII",
@@ -104,7 +111,9 @@
         "summary": "Emitir boleta de honorarios",
         "description": "Emite una boleta de honorarios en el SII de forma automática. Este endpoint realiza el login, navega al formulario de boletas, completa los datos y emite la boleta, retornando el PDF en formato base64.",
         "operationId": "emitirBoleta",
-        "tags": ["SII"],
+        "tags": [
+          "SII"
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -191,7 +200,10 @@
         "properties": {
           "status": {
             "type": "string",
-            "enum": ["ok", "error"],
+            "enum": [
+              "ok",
+              "error"
+            ],
             "example": "ok"
           },
           "timestamp": {
@@ -224,11 +236,19 @@
       },
       "EmitirBoletaRequest": {
         "type": "object",
-        "required": ["tipoRetencion", "rutDestinatario", "descripcionPrestacion", "valorPrestacion"],
+        "required": [
+          "tipoRetencion",
+          "rutDestinatario",
+          "descripcionPrestacion",
+          "valorPrestacion"
+        ],
         "properties": {
           "tipoRetencion": {
             "type": "string",
-            "enum": ["RETRECEPTOR", "RETCONTRIBUYENTE"],
+            "enum": [
+              "RETRECEPTOR",
+              "RETCONTRIBUYENTE"
+            ],
             "description": "Tipo de retención de la boleta. RETRECEPTOR: Retención por el receptor. RETCONTRIBUYENTE: Retención por el contribuyente.",
             "example": "RETRECEPTOR"
           },
@@ -307,6 +327,14 @@
             "nullable": true
           }
         }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Token de autenticación obtenido en https://kontaiapi.com"
       }
     }
   }

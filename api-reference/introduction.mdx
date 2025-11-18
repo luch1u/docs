@@ -1,5 +1,5 @@
 ---
-title: 'Introduction'
+title: 'Introducción'
 description: 'Documentación de la API SII para interactuar con el Servicio de Impuestos Internos de Chile'
 ---
 
@@ -8,7 +8,7 @@ description: 'Documentación de la API SII para interactuar con el Servicio de I
 Esta API permite interactuar con el SII (Servicio de Impuestos Internos) de Chile de forma automatizada. Utiliza Playwright para automatizar las interacciones con el portal web del SII.
 
 <Card
-  title="OpenAPI Specification"
+  title="Especificación OpenAPI"
   icon="file-code"
   href="https://github.com/luch1u/api-sii/blob/main/docs/api-reference/openapi.json"
 >
@@ -34,15 +34,41 @@ Esta API permite interactuar con el SII (Servicio de Impuestos Internos) de Chil
 
 ## Autenticación
 
-Las credenciales del SII se almacenan de forma segura en AWS Secrets Manager y se recuperan automáticamente en cada request. No es necesario enviar credenciales en las peticiones.
+Para usar esta API, necesitas obtener un token de autenticación. El proceso es el siguiente:
+
+1. Visita [https://kontaiapi.com](https://kontaiapi.com)
+2. Inicia sesión con tus credenciales
+3. Obtén tu token de API
+4. Usa el token en todas tus peticiones incluyéndolo en el header `Authorization`:
+
+```bash
+Authorization: Bearer TU_TOKEN_AQUI
+```
+
+<Warning>
+Sin un token válido, no podrás acceder a los endpoints de la API. Asegúrate de incluir el token en todas tus peticiones.
+</Warning>
 
 ## Base URL
 
-La API está desplegada en AWS API Gateway. La URL base depende del stage de despliegue:
+La API está disponible en el siguiente endpoint:
 
-- **Desarrollo**: `https://your-api-gateway-url.execute-api.us-east-1.amazonaws.com/dev`
-- **Local**: `http://localhost:3000` (usando serverless-offline)
+**Ambiente de desarrollo/pruebas:**
+```
+https://ql3xbjhoe0.execute-api.us-east-1.amazonaws.com/dev
+```
+
+<Tip>
+Todos los endpoints deben ser llamados usando esta URL base como prefijo. Por ejemplo: `https://ql3xbjhoe0.execute-api.us-east-1.amazonaws.com/dev/health`
+</Tip>
 
 ## CORS
 
 Todos los endpoints tienen CORS habilitado y aceptan peticiones desde cualquier origen.
+
+## Ejemplo de uso
+
+```bash
+curl -H "Authorization: Bearer TU_TOKEN_AQUI" \
+     https://ql3xbjhoe0.execute-api.us-east-1.amazonaws.com/dev/health
+```

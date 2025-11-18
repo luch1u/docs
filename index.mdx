@@ -1,97 +1,103 @@
 ---
-title: "Introduction"
-description: "Welcome to the new home for your documentation"
+title: "Documentación API SII"
+description: "API para interactuar con el Servicio de Impuestos Internos de Chile de forma automatizada"
 ---
 
-## Setting up
+## Bienvenido
 
-Get your documentation site up and running in minutes.
+Esta API te permite interactuar con el SII (Servicio de Impuestos Internos) de Chile de forma automatizada. Utiliza Playwright para automatizar las interacciones con el portal web del SII, permitiéndote verificar credenciales y emitir boletas de honorarios sin intervención manual.
 
 <Card
-  title="Start here"
+  title="Comenzar a usar la API"
   icon="rocket"
   href="/quickstart"
   horizontal
 >
-  Follow our three step quickstart guide.
+  Sigue nuestra guía rápida para obtener tu token y empezar a usar la API.
 </Card>
 
-## Make it yours
-
-Design a docs site that looks great and empowers your users.
+## Características principales
 
 <Columns cols={2}>
   <Card
-    title="Edit locally"
-    icon="pen-to-square"
-    href="/development"
+    title="Verificación de credenciales"
+    icon="shield-check"
+    href="/api-reference/endpoint/delete"
   >
-    Edit your docs locally and preview them in real time.
+    Verifica automáticamente el estado de tus credenciales del SII.
   </Card>
   <Card
-    title="Customize your site"
-    icon="palette"
-    href="/essentials/settings"
+    title="Emisión de boletas"
+    icon="file-invoice"
+    href="/api-reference/endpoint/create"
   >
-    Customize the design and colors of your site to match your brand.
-  </Card>
-    <Card
-    title="Set up navigation"
-    icon="map"
-    href="/essentials/navigation"
-  >
-    Organize your docs to help users find what they need and succeed with your product.
+    Emite boletas de honorarios automáticamente en el SII.
   </Card>
   <Card
-    title="API documentation"
-    icon="terminal"
+    title="Validación de RUT"
+    icon="check-circle"
     href="/api-reference/introduction"
   >
-    Auto-generate API documentation from OpenAPI specifications.
+    Validación automática de RUT chileno con dígito verificador.
+  </Card>
+  <Card
+    title="PDF automático"
+    icon="file-pdf"
+    href="/api-reference/endpoint/create"
+  >
+    Obtén el PDF de las boletas emitidas en formato base64.
   </Card>
 </Columns>
 
-## Create beautiful pages
+## Endpoints disponibles
 
-Everything you need to create world-class documentation.
+### Health Check
+- `GET /health` - Verifica que la API esté funcionando correctamente
 
-<Columns cols={2}>
-  <Card
-    title="Write with MDX"
-    icon="pen-fancy"
-    href="/essentials/markdown"
-  >
-    Use MDX to style your docs pages.
-  </Card>
-  <Card
-    title="Code samples"
-    icon="code"
-    href="/essentials/code"
-  >
-    Add sample code to demonstrate how to use your product.
-  </Card>
-  <Card
-    title="Images"
-    icon="image"
-    href="/essentials/images"
-  >
-    Display images and other media.
-  </Card>
-  <Card
-    title="Reusable snippets"
-    icon="recycle"
-    href="/essentials/reusable-snippets"
-  >
-    Write once and reuse across your docs.
-  </Card>
-</Columns>
-
-## Need inspiration?
+### SII
+- `GET /sii/health` - Verifica el estado de las credenciales del SII
+- `POST /sii/boleta` - Emite una boleta de honorarios automáticamente
 
 <Card
-  title="See complete examples"
-  icon="stars"
-  href="https://mintlify.com/customers"
+  title="Ver documentación completa de la API"
+  icon="terminal"
+  href="/api-reference/introduction"
 >
-  Browse our showcase of exceptional documentation sites.
+  Explora todos los endpoints disponibles con ejemplos y detalles técnicos.
+</Card>
+
+## Autenticación
+
+Para usar esta API, necesitas obtener un token de autenticación. El proceso es simple:
+
+1. Visita [https://kontaiapi.com](https://kontaiapi.com)
+2. Inicia sesión con tus credenciales
+3. Obtén tu token de API
+4. Usa el token en todas tus peticiones
+
+<Warning>
+Sin un token válido, no podrás acceder a los endpoints de la API.
+</Warning>
+
+## Base URL
+
+La API está disponible en el siguiente endpoint:
+
+**Ambiente de desarrollo/pruebas:**
+```
+https://ql3xbjhoe0.execute-api.us-east-1.amazonaws.com/dev
+```
+
+<Tip>
+Todos los endpoints deben ser llamados usando esta URL base como prefijo.
+</Tip>
+
+## ¿Necesitas ayuda?
+
+<Card
+  title="Ver ejemplos de código"
+  icon="code"
+  href="/api-reference/introduction"
+>
+  Revisa ejemplos prácticos de cómo usar cada endpoint.
 </Card>
