@@ -9,6 +9,13 @@
   },
   "favicon": "/favicon.svg",
   "openapi": "/api-reference/openapi.json",
+  "api": {
+    "baseUrl": "https://ql3xbjhoe0.execute-api.us-east-1.amazonaws.com/dev",
+    "auth": {
+      "method": "bearer",
+      "name": "Authorization"
+    }
+  },
   "navigation": {
     "tabs": [
       {

@@ -28,6 +28,11 @@
         "tags": [
           "Health"
         ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "API funcionando correctamente",
@@ -49,6 +54,11 @@
         "operationId": "healthCheckAlt",
         "tags": [
           "Health"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
         ],
         "responses": {
           "200": {
