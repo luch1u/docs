@@ -17,9 +17,39 @@ Emite una boleta de honorarios en el SII de forma automática. Este endpoint rea
 Este endpoint puede tardar entre 60-120 segundos ya que realiza todo el proceso de emisión de boleta de forma automatizada.
 </Warning>
 
+## Campos requeridos
+
+El endpoint requiere los siguientes campos en el body de la petición:
+
+- `tipoRetencion`: Tipo de retención (`RETRECEPTOR` o `RETCONTRIBUYENTE`)
+- `rutDestinatario`: RUT del destinatario en formato chileno (ej: `12345678-9`)
+- `descripcionPrestacion`: Descripción de la prestación de servicios
+- `valorPrestacion`: Valor numérico de la prestación en pesos chilenos
+- `rutSII`: RUT del contribuyente para autenticación en el SII (ej: `12345678-9`)
+- `passwordSII`: Contraseña (Clave Tributaria) del contribuyente para autenticación
+
+## Ejemplo de request
+
+```bash
+curl -X POST \
+     -H "Authorization: Bearer TU_TOKEN_AQUI" \
+     -H "Content-Type: application/json" \
+     -d '{
+       "tipoRetencion": "RETRECEPTOR",
+       "rutDestinatario": "12345678-9",
+       "descripcionPrestacion": "Servicios de consultoría en desarrollo de software",
+       "valorPrestacion": 500000,
+       "rutSII": "12345678-9",
+       "passwordSII": "miClaveTributaria123"
+     }' \
+     https://ql3xbjhoe0.execute-api.us-east-1.amazonaws.com/dev/sii/boleta
+```
+
 ## Validaciones
 
 - **RUT destinatario**: Se valida el formato y el dígito verificador
+- **RUT SII**: Se valida el formato y el dígito verificador del RUT del contribuyente
+- **Password SII**: Contraseña (Clave Tributaria) del contribuyente para autenticación
 - **Tipo de retención**: Debe ser `RETRECEPTOR` o `RETCONTRIBUYENTE`
 - **Valor de prestación**: Debe ser un número válido mayor a 0
 
@@ -32,7 +62,7 @@ La boleta fue emitida correctamente. El campo `pdfBase64` puede contener el PDF 
 Los parámetros enviados son inválidos o faltan campos requeridos.
 
 ### 401 - Login fallido
-No se pudo realizar el login en el SII. Verifique las credenciales configuradas.
+No se pudo realizar el login en el SII. Verifique que las credenciales (`rutSII` y `passwordSII`) proporcionadas sean correctas.
 
 ### 500 - Error del servidor
 Error interno durante el proceso de emisión.

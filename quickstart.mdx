@@ -89,7 +89,9 @@ Ahora que tienes tu token y verificaste que la API funciona, puedes probar los e
            "tipoRetencion": "RETRECEPTOR",
            "rutDestinatario": "12345678-9",
            "descripcionPrestacion": "Servicios de consultoría",
-           "valorPrestacion": 500000
+           "valorPrestacion": 500000,
+           "rutSII": "12345678-9",
+           "passwordSII": "tuClaveTributaria"
          }' \
          https://ql3xbjhoe0.execute-api.us-east-1.amazonaws.com/dev/sii/boleta
     ```
@@ -97,6 +99,10 @@ Ahora que tienes tu token y verificaste que la API funciona, puedes probar los e
     <Warning>
       Este endpoint puede tardar entre 60-120 segundos ya que realiza todo el proceso de emisión de boleta de forma automatizada.
     </Warning>
+    
+    <Info>
+      Necesitas proporcionar tus credenciales del SII (`rutSII` y `passwordSII`) en cada petición. Estas credenciales se utilizan para autenticarte en el portal del SII.
+    </Info>
   </Accordion>
 </AccordionGroup>
 

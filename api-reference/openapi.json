@@ -125,7 +125,9 @@
                 "tipoRetencion": "RETRECEPTOR",
                 "rutDestinatario": "12345678-9",
                 "descripcionPrestacion": "Servicios de consultoría en desarrollo de software",
-                "valorPrestacion": 500000
+                "valorPrestacion": 500000,
+                "rutSII": "12345678-9",
+                "passwordSII": "miClaveTributaria123"
               }
             }
           }
@@ -240,7 +242,9 @@
           "tipoRetencion",
           "rutDestinatario",
           "descripcionPrestacion",
-          "valorPrestacion"
+          "valorPrestacion",
+          "rutSII",
+          "passwordSII"
         ],
         "properties": {
           "tipoRetencion": {
@@ -268,6 +272,18 @@
             "description": "Valor de la prestación en pesos chilenos (sin puntos ni comas)",
             "minimum": 0,
             "example": 500000
+          },
+          "rutSII": {
+            "type": "string",
+            "description": "RUT del contribuyente para autenticación en el SII en formato chileno (12345678-9). El dígito verificador será validado automáticamente.",
+            "pattern": "^\\d{7,8}-[0-9K]$",
+            "example": "12345678-9"
+          },
+          "passwordSII": {
+            "type": "string",
+            "description": "Contraseña (Clave Tributaria) del contribuyente para autenticación en el SII",
+            "format": "password",
+            "example": "miClaveTributaria123"
           }
         }
       },
